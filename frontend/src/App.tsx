@@ -10,12 +10,8 @@ import {
   Sparkles,
   Loader2,
 } from 'lucide-react';
-import {
-  ValidationStatus,
-  ExtractedRule,
-  ValidationResult,
-  UploadedFile,
-} from './types';
+import { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile } from './types';
+import { uploadPolicy } from './api';
 
 // Mock data
 const mockExtractedRules: ExtractedRule[] = [
@@ -111,6 +107,7 @@ interface UploadCardProps {
   hoverBorderClass: string;
   hoverBgClass: string;
   error?: string;
+  isLoading?: boolean;
 }
 
 function UploadCard({
@@ -126,6 +123,7 @@ function UploadCard({
   hoverBorderClass,
   hoverBgClass,
   error,
+  isLoading,
 }: UploadCardProps) {
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -164,7 +162,17 @@ function UploadCard({
         </div>
       </div>
 
-      {file ? (
+      {isLoading ? (
+        <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+          <div className="w-8 h-8 bg-violet-100 rounded-lg flex items-center justify-center">
+            <Loader2 className="w-4 h-4 text-violet-600 animate-spin" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-slate-900">Uploading...</p>
+            <p className="text-xs text-slate-500">Please wait</p>
+          </div>
+        </div>
+      ) : file ? (
         <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
           <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
             <CheckCircle className="w-4 h-4 text-emerald-600" />
@@ -204,19 +212,34 @@ export default function App() {
   const [showDebug, setShowDebug] = useState(false);
   const [policyFile, setPolicyFile] = useState<UploadedFile | null>(null);
   const [expensesFile, setExpensesFile] = useState<UploadedFile | null>(null);
+  const [isUploadingPolicy, setIsUploadingPolicy] = useState(false);
+  const [policyError, setPolicyError] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [validationResults, setValidationResults] = useState<ValidationResult[] | null>(null);
   const [extractedRules, setExtractedRules] = useState<ExtractedRule[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handlePolicySelect = (file: File) => {
-    setPolicyFile({
-      name: file.name,
-      size: `${Math.round(file.size / 1024)} KB`,
-    });
+  const handlePolicySelect = async (file: File) => {
+    setIsUploadingPolicy(true);
+    setPolicyError(null);
     setValidationResults(null);
     setExtractedRules(null);
     setError(null);
+
+    try {
+      const result = await uploadPolicy(file);
+      setPolicyFile({
+        name: result.originalName,
+        size: `${Math.round(file.size / 1024)} KB`,
+        id: result.id,
+        serverPath: result.path,
+      });
+    } catch (err) {
+      setPolicyError(err instanceof Error ? err.message : 'Failed to upload policy');
+      setPolicyFile(null);
+    } finally {
+      setIsUploadingPolicy(false);
+    }
   };
 
   const handleExpensesSelect = (file: File) => {
@@ -295,6 +318,8 @@ export default function App() {
             iconClass="text-violet-600"
             hoverBorderClass="hover:border-violet-300"
             hoverBgClass="hover:bg-violet-50/50"
+            error={policyError || undefined}
+            isLoading={isUploadingPolicy}
           />
 
           <UploadCard

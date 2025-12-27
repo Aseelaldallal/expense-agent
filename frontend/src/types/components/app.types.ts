@@ -18,4 +18,7 @@ export interface UploadedFile {
   name: string;
   size: string;
   details?: string;
+  // Server response fields
+  id?: string;
+  serverPath?: string;
 }
