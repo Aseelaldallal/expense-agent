@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import cors from 'cors';
+import { createUploadRouter } from './routes/upload.routes';
 
 export function createApp(): Express {
   const app = express();
@@ -7,9 +8,8 @@ export function createApp(): Express {
   app.use(express.json());
   app.use(cors());
 
-  app.get('/health', (_req, res) => {
-    res.json({ status: 'ok' });
-  });
+  // Routes
+  app.use('/api/upload', createUploadRouter());
 
   return app;
 }

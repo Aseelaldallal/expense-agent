@@ -1,3 +1,4 @@
 export const TOKENS = {
-  // Add tokens here as needed
+  UploadService: Symbol.for('UploadService'),
+  UploadController: Symbol.for('UploadController'),
 };
