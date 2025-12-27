@@ -10,29 +10,12 @@ import {
   Sparkles,
   Loader2,
 } from 'lucide-react';
-
-// Types
-type ValidationStatus = 'approved' | 'needs_review' | 'violation';
-
-interface ExtractedRule {
-  category: string;
-  maxAmount: number | null;
-  conditions: string[];
-}
-
-interface ValidationResult {
-  expense: string;
-  amount: number;
-  status: ValidationStatus;
-  reason: string;
-  rule: string;
-}
-
-interface UploadedFile {
-  name: string;
-  size: string;
-  details?: string;
-}
+import {
+  ValidationStatus,
+  ExtractedRule,
+  ValidationResult,
+  UploadedFile,
+} from './types';
 
 // Mock data
 const mockExtractedRules: ExtractedRule[] = [

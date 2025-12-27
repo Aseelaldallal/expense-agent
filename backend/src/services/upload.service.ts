@@ -1,13 +1,6 @@
 import { injectable } from 'inversify';
 import path from 'path';
-
-export interface PolicyUploadResult {
-  id: string;
-  filename: string;
-  originalName: string;
-  path: string;
-  uploadedAt: Date;
-}
+import { PolicyUploadResult } from '../types';
 
 @injectable()
 export class UploadService {
