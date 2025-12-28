@@ -20,30 +20,29 @@
    - `upload.controller.ts` → `types/controllers/upload.types.ts`
    - `upload.service.ts` → `types/services/upload.types.ts`
 
-5. Export all types from an `index.ts` in each subfolder, and re-export from the root `types/index.ts`
+5. Import directly from type files (no barrel/index.ts files)
+
+6. Always use `import type` for type-only imports:
+   - `import type { X } from '../types/services/upload.types'`
+
+7. Only create type files/folders when needed (no empty placeholders)
 
 ### Example Structure
 
 ```
 backend/src/types/
-├── services/
-│   ├── upload.types.ts
-│   └── index.ts
-├── controllers/
-│   └── index.ts
-└── index.ts
+└── services/
+    └── upload.types.ts
 
 frontend/src/types/
 ├── components/
-│   ├── app.types.ts
-│   └── index.ts
-└── index.ts
+│   └── app.types.ts
+└── api/
+    └── upload.types.ts
 
 shared/types/
-├── api/
-│   ├── upload.types.ts
-│   └── index.ts
-└── index.ts
+└── api/
+    └── upload.types.ts
 ```
 
 ## Architecture Pattern

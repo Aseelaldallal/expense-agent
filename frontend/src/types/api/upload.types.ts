@@ -1,1 +1,1 @@
-export type { FileUploadResult } from '@shared/types';
+export type { FileUploadResult } from '@shared/types/api/upload.types';

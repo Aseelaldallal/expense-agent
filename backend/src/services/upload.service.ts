@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import path from 'path';
-import { FileUploadResult } from '../types';
+import type { FileUploadResult } from '../types/services/upload.types';
 
 @injectable()
 export class UploadService {

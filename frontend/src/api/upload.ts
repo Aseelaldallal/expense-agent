@@ -1,4 +1,4 @@
-import { FileUploadResult } from '../types';
+import type { FileUploadResult } from '../types/api/upload.types';
 
 const API_BASE = '/api';
 

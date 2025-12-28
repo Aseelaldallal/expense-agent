@@ -10,7 +10,7 @@ import {
   Sparkles,
   Loader2,
 } from 'lucide-react';
-import { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile } from './types';
+import type { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile } from './types/components/app.types';
 import { uploadPolicy } from './api';
 
 // Mock data
