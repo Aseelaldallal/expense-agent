@@ -33,9 +33,6 @@ export const policyUpload = multer({
 // Expense upload configuration
 export const expenseUpload = multer({
   storage,
-  fileFilter: createFileFilter(
-    ['.csv', '.json'],
-    'Only .csv and .json files are allowed'
-  ),
+  fileFilter: createFileFilter(['.csv'], 'Only .csv files are allowed'),
   limits: { fileSize: MAX_FILE_SIZE },
 });

@@ -362,8 +362,8 @@ export default function App() {
             file={expensesFile}
             onFileSelect={handleExpensesSelect}
             onClear={handleClearExpenses}
-            acceptedTypes=".csv,.json"
-            acceptedTypesDisplay=".csv, .json"
+            acceptedTypes=".csv"
+            acceptedTypesDisplay=".csv"
             iconBgClass="bg-indigo-100"
             iconClass="text-indigo-600"
             hoverBorderClass="hover:border-indigo-300"
