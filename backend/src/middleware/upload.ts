@@ -1,25 +1,9 @@
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-const createStorage = (uploadDir: string, filenamePrefix: string): multer.StorageEngine => {
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
-
-  return multer.diskStorage({
-    destination: (_req, _file, cb) => {
-      cb(null, uploadDir);
-    },
-    filename: (_req, file, cb) => {
-      const timestamp = Date.now();
-      const ext = path.extname(file.originalname);
-      cb(null, `${filenamePrefix}-${timestamp}${ext}`);
-    },
-  });
-};
+const storage = multer.memoryStorage();
 
 const createFileFilter = (
   allowedExtensions: string[],
@@ -38,7 +22,7 @@ const createFileFilter = (
 
 // Policy upload configuration
 export const policyUpload = multer({
-  storage: createStorage('uploads/policies', 'policy'),
+  storage,
   fileFilter: createFileFilter(
     ['.md', '.txt', '.pdf'],
     'Only .md, .txt, and .pdf files are allowed'
@@ -48,7 +32,7 @@ export const policyUpload = multer({
 
 // Expense upload configuration
 export const expenseUpload = multer({
-  storage: createStorage('uploads/expenses', 'expense'),
+  storage,
   fileFilter: createFileFilter(
     ['.csv', '.json'],
     'Only .csv and .json files are allowed'
