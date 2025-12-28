@@ -9,9 +9,10 @@ import {
   ChevronUp,
   Sparkles,
   Loader2,
+  Trash2,
 } from 'lucide-react';
 import type { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile } from './types/components/app.types';
-import { uploadPolicy, uploadExpense } from './api';
+import { uploadPolicy, uploadExpense, deletePolicy, deleteExpense } from './api';
 
 // Mock data
 const mockExtractedRules: ExtractedRule[] = [
@@ -185,9 +186,10 @@ function UploadCard({
           </div>
           <button
             onClick={onClear}
-            className="text-sm text-slate-500 hover:text-slate-700 cursor-pointer"
+            className="text-slate-400 hover:text-red-500 cursor-pointer"
+            aria-label="Delete file"
           >
-            Change
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       ) : (
@@ -267,6 +269,24 @@ export default function App() {
     }
   };
 
+  const handleClearPolicy = async () => {
+    try {
+      await deletePolicy();
+      setPolicyFile(null);
+    } catch (err) {
+      console.error('Failed to delete policy:', err);
+    }
+  };
+
+  const handleClearExpenses = async () => {
+    try {
+      await deleteExpense();
+      setExpensesFile(null);
+    } catch (err) {
+      console.error('Failed to delete expenses:', err);
+    }
+  };
+
   const handleValidate = async () => {
     if (!policyFile || !expensesFile) return;
 
@@ -325,7 +345,7 @@ export default function App() {
             description="Upload your company expense policy"
             file={policyFile}
             onFileSelect={handlePolicySelect}
-            onClear={() => setPolicyFile(null)}
+            onClear={handleClearPolicy}
             acceptedTypes=".md,.txt,.pdf"
             acceptedTypesDisplay=".md, .txt, .pdf"
             iconBgClass="bg-violet-100"
@@ -341,7 +361,7 @@ export default function App() {
             description="Upload expenses to validate"
             file={expensesFile}
             onFileSelect={handleExpensesSelect}
-            onClear={() => setExpensesFile(null)}
+            onClear={handleClearExpenses}
             acceptedTypes=".csv,.json"
             acceptedTypesDisplay=".csv, .json"
             iconBgClass="bg-indigo-100"

@@ -35,3 +35,25 @@ export async function uploadExpense(file: File): Promise<FileUploadResult> {
 
   return response.json();
 }
+
+export async function deletePolicy(): Promise<void> {
+  const response = await fetch(`${API_BASE}/upload/policy`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to delete policy');
+  }
+}
+
+export async function deleteExpense(): Promise<void> {
+  const response = await fetch(`${API_BASE}/upload/expense`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to delete expense');
+  }
+}
