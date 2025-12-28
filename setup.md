@@ -3,11 +3,14 @@
 ## Prerequisites
 
 - Node.js 22.x or higher
+- OpenAI API key
 
 ## Backend
 
 ```bash
 cd backend
+cp .env.sample .env
+# Edit .env and add your OpenAI API key
 npm install
 npm run dev
 ```

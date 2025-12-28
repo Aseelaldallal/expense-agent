@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "inversify": "^7.1.0",
     "multer": "^2.0.2",
+    "openai": "^6.15.0",
     "papaparse": "^5.5.3",
     "reflect-metadata": "^0.2.2"
   },

@@ -1,8 +1,9 @@
+import 'dotenv/config';
 import 'reflect-metadata';
 import { initializeContainer } from './container';
 import { createApp } from './app';
 
-const PORT = 3001;
+const PORT = process.env.PORT;
 
 async function startServer() {
   try {
