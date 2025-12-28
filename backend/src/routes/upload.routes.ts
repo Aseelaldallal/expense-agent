@@ -12,14 +12,14 @@ export function createUploadRouter(): Router {
     '/policy',
     policyUpload.single('file'),
     handleMulterError,
-    (req: Request, res: Response) => uploadController.uploadFile(req, res, 'policy')
+    (req: Request, res: Response) => uploadController.uploadPolicy(req, res)
   );
 
   router.post(
     '/expense',
     expenseUpload.single('file'),
     handleMulterError,
-    (req: Request, res: Response) => uploadController.uploadFile(req, res, 'expense')
+    (req: Request, res: Response) => uploadController.uploadExpense(req, res)
   );
 
   router.delete('/policy', (req: Request, res: Response) =>
