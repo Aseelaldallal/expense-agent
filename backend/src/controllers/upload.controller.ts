@@ -7,7 +7,7 @@ import { UploadService } from '../services/upload.service';
 export class UploadController {
   constructor(@inject(TOKENS.UploadService) private readonly uploadService: UploadService) {}
 
-  async uploadPolicy(req: Request, res: Response): Promise<void> {
+  public async uploadFile(req: Request, res: Response): Promise<void> {
     try {
       const file = req.file;
 
@@ -16,11 +16,11 @@ export class UploadController {
         return;
       }
 
-      const result = this.uploadService.savePolicy(file);
+      const result = this.uploadService.saveFile(file);
       res.status(201).json(result);
     } catch (error) {
-      console.error('Error uploading policy:', error);
-      res.status(500).json({ error: 'Failed to upload policy' });
+      console.error('Error uploading file:', error);
+      res.status(500).json({ error: 'Failed to upload file' });
     }
   }
 }

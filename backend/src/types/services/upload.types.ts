@@ -1,2 +1,2 @@
 // Re-export shared types used by upload service
-export { PolicyUploadResult } from '../../../../shared/types';
+export { FileUploadResult } from '../../../../shared/types';

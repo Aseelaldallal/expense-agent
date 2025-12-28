@@ -1,1 +1,1 @@
-export type { PolicyUploadResult } from '@shared/types';
+export type { FileUploadResult } from '@shared/types';

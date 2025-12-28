@@ -1,8 +1,8 @@
-import { PolicyUploadResult } from '../types';
+import { FileUploadResult } from '../types';
 
 const API_BASE = '/api';
 
-export async function uploadPolicy(file: File): Promise<PolicyUploadResult> {
+export async function uploadPolicy(file: File): Promise<FileUploadResult> {
   const formData = new FormData();
   formData.append('file', file);
 
