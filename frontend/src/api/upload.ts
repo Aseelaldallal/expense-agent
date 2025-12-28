@@ -18,3 +18,20 @@ export async function uploadPolicy(file: File): Promise<FileUploadResult> {
 
   return response.json();
 }
+
+export async function uploadExpense(file: File): Promise<FileUploadResult> {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch(`${API_BASE}/upload/expense`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to upload expense');
+  }
+
+  return response.json();
+}

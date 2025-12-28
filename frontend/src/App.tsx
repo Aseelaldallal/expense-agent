@@ -11,7 +11,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import type { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile } from './types/components/app.types';
-import { uploadPolicy } from './api';
+import { uploadPolicy, uploadExpense } from './api';
 
 // Mock data
 const mockExtractedRules: ExtractedRule[] = [
@@ -214,6 +214,8 @@ export default function App() {
   const [expensesFile, setExpensesFile] = useState<UploadedFile | null>(null);
   const [isUploadingPolicy, setIsUploadingPolicy] = useState(false);
   const [policyError, setPolicyError] = useState<string | null>(null);
+  const [isUploadingExpenses, setIsUploadingExpenses] = useState(false);
+  const [expensesError, setExpensesError] = useState<string | null>(null);
   const [isValidating, setIsValidating] = useState(false);
   const [validationResults, setValidationResults] = useState<ValidationResult[] | null>(null);
   const [extractedRules, setExtractedRules] = useState<ExtractedRule[] | null>(null);
@@ -242,15 +244,27 @@ export default function App() {
     }
   };
 
-  const handleExpensesSelect = (file: File) => {
-    setExpensesFile({
-      name: file.name,
-      size: `${Math.round(file.size / 1024)} KB`,
-      details: '4 expenses',
-    });
+  const handleExpensesSelect = async (file: File) => {
+    setIsUploadingExpenses(true);
+    setExpensesError(null);
     setValidationResults(null);
     setExtractedRules(null);
     setError(null);
+
+    try {
+      const result = await uploadExpense(file);
+      setExpensesFile({
+        name: result.originalName,
+        size: `${Math.round(file.size / 1024)} KB`,
+        id: result.id,
+        serverPath: result.path,
+      });
+    } catch (err) {
+      setExpensesError(err instanceof Error ? err.message : 'Failed to upload expense');
+      setExpensesFile(null);
+    } finally {
+      setIsUploadingExpenses(false);
+    }
   };
 
   const handleValidate = async () => {
@@ -334,6 +348,8 @@ export default function App() {
             iconClass="text-indigo-600"
             hoverBorderClass="hover:border-indigo-300"
             hoverBgClass="hover:bg-indigo-50/50"
+            error={expensesError || undefined}
+            isLoading={isUploadingExpenses}
           />
         </div>
 
