@@ -1,17 +1,17 @@
 import 'dotenv/config';
 import 'reflect-metadata';
+import { validateEnv } from './config/env';
 import { initializeContainer } from './container';
 import { createApp } from './app';
 
-const PORT = process.env.PORT;
-
 async function startServer() {
   try {
+    validateEnv();
     await initializeContainer();
     const app = createApp();
 
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+    app.listen(process.env.PORT, () => {
+      console.log(`Server running on http://localhost:${process.env.PORT}`);
     });
   } catch (error) {
     console.error('Error starting server:', error);
