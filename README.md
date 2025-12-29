@@ -39,3 +39,26 @@ Exception: If expenses were in weird formats (handwritten receipts, unstructured
 
 Summary:
 DataFormatParserExpensesStructured (CSV/JSON)CodePoliciesUnstructured (prose)LLM
+
+---------
+
+Three separate services:
+
+ExpenseCsvService — parses CSV → Expense[]
+
+Used during upload (validate structure)
+Used in pipeline (get expenses for validation)
+
+
+PolicyRuleExtractor — reads policy → extracts rules via LLM call #1
+
+Used only in pipeline
+
+
+ExpenseValidator — validates expenses against rules via LLM call #2
+
+Takes: expenses: Expense[], rules: ExtractedPolicy
+Returns: ValidationResult[]
+Used only in pipeline
+
+Then: ValidationPipeline — orchestrates everything:

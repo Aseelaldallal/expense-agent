@@ -5,6 +5,7 @@ export const TOKENS = {
   // Services
   UploadService: Symbol.for('UploadService'),
   ExpenseCsvService: Symbol.for('ExpenseCsvService'),
+  PolicyRuleExtractorService: Symbol.for('PolicyRuleExtractorService'),
 
   // Controllers
   UploadController: Symbol.for('UploadController'),
