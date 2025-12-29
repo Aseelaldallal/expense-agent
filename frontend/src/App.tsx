@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   Upload,
   FileText,
@@ -12,7 +12,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import type { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile } from './types/components/app.types';
-import { uploadPolicy, uploadExpense, deletePolicy, deleteExpense } from './api';
+import { uploadPolicy, uploadExpense, deletePolicy, deleteExpense, listPolicies, listExpenses } from './api';
 
 // Mock data
 const mockExtractedRules: ExtractedRule[] = [
@@ -222,6 +222,38 @@ export default function App() {
   const [validationResults, setValidationResults] = useState<ValidationResult[] | null>(null);
   const [extractedRules, setExtractedRules] = useState<ExtractedRule[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadExistingFiles() {
+      try {
+        const [policies, expenses] = await Promise.all([listPolicies(), listExpenses()]);
+
+        if (policies.length > 0) {
+          const policy = policies[0];
+          setPolicyFile({
+            name: policy.filename,
+            size: '',
+            id: policy.id,
+            serverPath: policy.path,
+          });
+        }
+
+        if (expenses.length > 0) {
+          const expense = expenses[0];
+          setExpensesFile({
+            name: expense.filename,
+            size: '',
+            id: expense.id,
+            serverPath: expense.path,
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load existing files:', err);
+      }
+    }
+
+    loadExistingFiles();
+  }, []);
 
   const handlePolicySelect = async (file: File) => {
     setIsUploadingPolicy(true);

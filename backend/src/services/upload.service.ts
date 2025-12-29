@@ -41,4 +41,29 @@ export class UploadService {
     const files = await fs.readdir(dirPath);
     await Promise.all(files.map((file) => fs.unlink(path.join(dirPath, file))));
   }
+
+  public async listFiles(category: FileCategory): Promise<FileUploadResult[]> {
+    const dirPath = path.resolve(UPLOAD_DIRECTORIES[category]);
+
+    const exists = await fs.access(dirPath).then(() => true).catch(() => false);
+    if (!exists) return [];
+
+    const files = await fs.readdir(dirPath);
+    const results = await Promise.all(
+      files.map(async (filename) => {
+        const filePath = path.join(dirPath, filename);
+        const stats = await fs.stat(filePath);
+        const id = path.basename(filename, path.extname(filename));
+
+        return {
+          id,
+          filename,
+          originalName: filename,
+          path: filePath,
+          uploadedAt: stats.mtime,
+        };
+      })
+    );
+    return results;
+  }
 }

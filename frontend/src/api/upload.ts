@@ -57,3 +57,25 @@ export async function deleteExpense(): Promise<void> {
     throw new Error(error.error || 'Failed to delete expense');
   }
 }
+
+export async function listPolicies(): Promise<FileUploadResult[]> {
+  const response = await fetch(`${API_BASE}/upload/policy`);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to list policies');
+  }
+
+  return response.json();
+}
+
+export async function listExpenses(): Promise<FileUploadResult[]> {
+  const response = await fetch(`${API_BASE}/upload/expense`);
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to list expenses');
+  }
+
+  return response.json();
+}

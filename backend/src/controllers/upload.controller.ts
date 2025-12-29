@@ -61,4 +61,18 @@ export class UploadController {
       res.status(500).json({ error: `Failed to delete ${category} files` });
     }
   }
+
+  public async listFiles(
+    _req: Request,
+    res: Response,
+    category: FileCategory
+  ): Promise<void> {
+    try {
+      const files = await this.uploadService.listFiles(category);
+      res.status(200).json(files);
+    } catch (error) {
+      console.error(`Error listing ${category} files:`, error);
+      res.status(500).json({ error: `Failed to list ${category} files` });
+    }
+  }
 }

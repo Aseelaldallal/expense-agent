@@ -30,5 +30,13 @@ export function createUploadRouter(): Router {
     uploadController.deleteFile(req, res, 'expense')
   );
 
+  router.get('/policy', (req: Request, res: Response) =>
+    uploadController.listFiles(req, res, 'policy')
+  );
+
+  router.get('/expense', (req: Request, res: Response) =>
+    uploadController.listFiles(req, res, 'expense')
+  );
+
   return router;
 }
