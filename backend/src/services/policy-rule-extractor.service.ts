@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import OpenAI from 'openai';
 import fs from 'fs/promises';
 import { TOKENS } from '../container/injection-tokens';
-import type { ExtractedPolicy } from '../types/policy.types';
+import type { ExtractedPolicy } from '../types/services/policy-rule-extractor.types';
 import {
   POLICY_EXTRACTION_SYSTEM_PROMPT,
   POLICY_EXTRACTION_USER_PROMPT,

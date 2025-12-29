@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import Papa from 'papaparse';
-import type { Expense } from '../types/expense.types';
+import type { Expense } from '../types/services/expense-csv.types';
 
 const REQUIRED_COLUMNS = ['date', 'employee', 'category', 'amount', 'description'] as const;
 
