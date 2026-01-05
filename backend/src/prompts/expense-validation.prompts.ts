@@ -1,5 +1,4 @@
-import type { Expense } from '../types/services/expense-csv.types';
-import type { ExtractedPolicy } from '../types/services/policy-rule-extractor.types';
+import type { Expense, ExtractedPolicy } from '../../../shared/types/api/validation.types';
 
 /**
  * System Prompt: Sets the LLM's role and behavior for the entire conversation.

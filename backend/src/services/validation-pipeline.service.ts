@@ -3,7 +3,7 @@ import { TOKENS } from '../container/injection-tokens';
 import { ExpenseCsvService } from './expense-csv.service';
 import { PolicyRuleExtractorService } from './policy-rule-extractor.service';
 import { ExpenseValidatorService } from './expense-validator.service';
-import type { ValidationPipelineResult } from '../types/services/validation-pipeline.types';
+import type { ValidationPipelineResult } from '../../../shared/types/api/validation.types';
 
 @injectable()
 export class ValidationPipelineService {

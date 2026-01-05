@@ -1,7 +1,8 @@
 import { injectable } from 'inversify';
 import path from 'path';
 import fs from 'fs/promises';
-import type { FileCategory, FileUploadResult } from '../types/services/upload.types';
+import type { FileCategory } from '../types/services/upload.types';
+import type { FileUploadResult } from '../../../shared/types/api/upload.types';
 import { UPLOAD_DIRECTORIES } from '../config/paths';
 
 @injectable()
