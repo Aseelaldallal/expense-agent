@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import cors from 'cors';
 import { createUploadRouter } from './routes/upload.routes';
+import { createValidationRouter } from './routes/validation.routes';
 
 export function createApp(): Express {
   const app = express();
@@ -10,6 +11,7 @@ export function createApp(): Express {
 
   // Routes
   app.use('/api/upload', createUploadRouter());
+  app.use('/api/validate', createValidationRouter());
 
   return app;
 }

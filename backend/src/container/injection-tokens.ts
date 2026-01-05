@@ -11,4 +11,5 @@ export const TOKENS = {
 
   // Controllers
   UploadController: Symbol.for('UploadController'),
+  ValidationController: Symbol.for('ValidationController'),
 };

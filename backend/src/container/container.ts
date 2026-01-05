@@ -5,6 +5,7 @@ import { TOKENS } from './injection-tokens';
 import { UploadService } from '../services/upload.service';
 import { ExpenseCsvService } from '../services/expense-csv.service';
 import { UploadController } from '../controllers/upload.controller';
+import { ValidationController } from '../controllers/validation.controller';
 import { PolicyRuleExtractorService } from '../services/policy-rule-extractor.service';
 import { ExpenseValidatorService } from '../services/expense-validator.service';
 import { ValidationPipelineService } from '../services/validation-pipeline.service';
@@ -68,6 +69,10 @@ export async function initializeContainer(): Promise<Container> {
 
   // Controllers
   container.bind<UploadController>(TOKENS.UploadController).to(UploadController).inSingletonScope();
+  container
+    .bind<ValidationController>(TOKENS.ValidationController)
+    .to(ValidationController)
+    .inSingletonScope();
 
   return container;
 }
