@@ -22,7 +22,7 @@ export const EXPENSE_VALIDATION_USER_PROMPT = (
   expenses: Expense[],
   extractedPolicy: ExtractedPolicy
 ) => `Validate each expense against the policy rules.
-Return JSON array matching this TypeScript interface:
+Return JSON: { results: ValidationResult[] } where ValidationResult is:
 interface ValidationResult {
   expense: Expense;
   status: 'approved' | 'needs_review' | 'violation';
