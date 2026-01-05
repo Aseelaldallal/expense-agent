@@ -1,6 +1,5 @@
 import { inject, injectable } from 'inversify';
 import OpenAI from 'openai';
-import fs from 'fs/promises';
 import { TOKENS } from '../container/injection-tokens';
 import type { ExtractedPolicy } from '../types/services/policy-rule-extractor.types';
 import {
@@ -21,24 +20,13 @@ export class PolicyRuleExtractorService {
   constructor(@inject(TOKENS.OpenAI) private readonly openai: OpenAI) {}
 
   /**
- * Extracts expense rules from a policy document using OpenAI.
- * 
- * NOTE: This implementation loads the entire file into memory, which is
- * inefficient for large files. For this learning project with small text
- * files (< 100KB), this is acceptable.
- */
-  async extract(filePath: string): Promise<ExtractedPolicy> {
-    const policyText = await this.readPolicyFile(filePath);
+   * Extracts expense rules from policy text using OpenAI.
+   * @param policyText - Raw policy document content
+   * @returns Structured policy rules
+   */
+  public async extract(policyText: string): Promise<ExtractedPolicy> {
     const response = await this.callOpenAI(policyText);
     return this.parseResponse(response);
-  }
-
-  private async readPolicyFile(filePath: string): Promise<string> {
-    try {
-      return await fs.readFile(filePath, 'utf-8');
-    } catch (error) {
-      throw new Error(`Failed to read policy file at ${filePath}: ${(error as Error).message}`);
-    }
   }
 
   private async callOpenAI(policyText: string): Promise<string> {

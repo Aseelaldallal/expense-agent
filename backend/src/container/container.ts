@@ -7,6 +7,7 @@ import { ExpenseCsvService } from '../services/expense-csv.service';
 import { UploadController } from '../controllers/upload.controller';
 import { PolicyRuleExtractorService } from '../services/policy-rule-extractor.service';
 import { ExpenseValidatorService } from '../services/expense-validator.service';
+import { ValidationPipelineService } from '../services/validation-pipeline.service';
 
 /**
  * Inversify Dependency Injection Container
@@ -59,6 +60,10 @@ export async function initializeContainer(): Promise<Container> {
   container
     .bind<ExpenseValidatorService>(TOKENS.ExpenseValidatorService)
     .to(ExpenseValidatorService)
+    .inSingletonScope();
+  container
+    .bind<ValidationPipelineService>(TOKENS.ValidationPipelineService)
+    .to(ValidationPipelineService)
     .inSingletonScope();
 
   // Controllers
