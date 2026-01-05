@@ -12,58 +12,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import type { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile } from './types/components/app.types';
-import { uploadPolicy, uploadExpense, deletePolicy, deleteExpense, listPolicies, listExpenses } from './api';
-
-// Mock data
-const mockExtractedRules: ExtractedRule[] = [
-  { category: 'Meals', maxAmount: 50, conditions: ['per person limit'] },
-  {
-    category: 'Software',
-    maxAmount: 100,
-    conditions: ['requires manager approval over threshold'],
-  },
-  {
-    category: 'Entertainment',
-    maxAmount: 200,
-    conditions: ['requires client name in description'],
-  },
-  {
-    category: 'Travel',
-    maxAmount: null,
-    conditions: ['economy class only for flights under 6 hours'],
-  },
-];
-
-const mockValidationResults: ValidationResult[] = [
-  {
-    expense: 'Team lunch (3 people)',
-    amount: 75,
-    status: 'approved',
-    reason: '$25 per person, under $50 limit',
-    rule: 'Meals',
-  },
-  {
-    expense: 'Figma annual license',
-    amount: 250,
-    status: 'needs_review',
-    reason: 'Over $100 threshold, requires manager approval',
-    rule: 'Software',
-  },
-  {
-    expense: 'Client dinner',
-    amount: 180,
-    status: 'violation',
-    reason: 'No client name provided in description',
-    rule: 'Entertainment',
-  },
-  {
-    expense: 'Flight to NYC (3 hours)',
-    amount: 450,
-    status: 'approved',
-    reason: 'Economy class, under 6 hour threshold',
-    rule: 'Travel',
-  },
-];
+import { uploadPolicy, uploadExpense, deletePolicy, deleteExpense, listPolicies, listExpenses, validateExpenses } from './api';
 
 // Components
 function StatusIcon({ status }: { status: ValidationStatus }) {
@@ -327,19 +276,32 @@ export default function App() {
     setValidationResults(null);
     setExtractedRules(null);
 
-    // Simulate API call with mock data
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      const response = await validateExpenses();
 
-    // Simulate occasional error (10% chance)
-    if (Math.random() < 0.1) {
-      setError('Failed to validate expenses. Please try again.');
+      // Map backend PolicyRule[] → frontend ExtractedRule[]
+      const rules = response.extractedPolicy.rules.map((r) => ({
+        category: r.category,
+        maxAmount: r.maxAmount ?? null,
+        conditions: r.conditions ?? [],
+      }));
+
+      // Map backend ValidationResult[] → frontend ValidationResult[]
+      const results = response.results.map((r) => ({
+        expense: r.expense.description,
+        amount: r.expense.amount,
+        status: r.status,
+        reason: r.reason,
+        rule: r.ruleApplied ?? r.expense.category,
+      }));
+
+      setExtractedRules(rules);
+      setValidationResults(results);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Validation failed');
+    } finally {
       setIsValidating(false);
-      return;
     }
-
-    setExtractedRules(mockExtractedRules);
-    setValidationResults(mockValidationResults);
-    setIsValidating(false);
   };
 
   const canValidate = policyFile && expensesFile && !isValidating;
@@ -446,21 +408,7 @@ export default function App() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-12 text-center">
             <Loader2 className="w-12 h-12 text-violet-500 animate-spin mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-slate-900 mb-2">Validating Expenses</h3>
-            <p className="text-slate-500">Running multi-step validation chain...</p>
-            <div className="mt-6 space-y-2 text-sm text-left max-w-xs mx-auto">
-              <div className="flex items-center gap-2 text-emerald-600">
-                <CheckCircle className="w-4 h-4" />
-                <span>Step 1: Parsing expenses...</span>
-              </div>
-              <div className="flex items-center gap-2 text-violet-600">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Step 2: Extracting rules...</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-400">
-                <div className="w-4 h-4 rounded-full border-2 border-slate-300" />
-                <span>Step 3: Validating...</span>
-              </div>
-            </div>
+            <p className="text-slate-500">This may take a few seconds...</p>
           </div>
         )}
 
