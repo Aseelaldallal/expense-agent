@@ -8,6 +8,7 @@ import {
   EXPENSE_VALIDATION_SYSTEM_PROMPT,
   EXPENSE_VALIDATION_USER_PROMPT,
 } from '../prompts/expense-validation.prompts';
+import { chunkArray } from '../utils/array';
 
 const BATCH_SIZE = 5;
 
@@ -25,7 +26,7 @@ export class ExpenseValidatorService {
     expenses: Expense[],
     extractedPolicy: ExtractedPolicy
   ): Promise<ValidationResult[]> {
-    const batches = this.chunkArray(expenses, BATCH_SIZE);
+    const batches = chunkArray(expenses, BATCH_SIZE);
     const results: ValidationResult[] = [];
 
     for (const batch of batches) {
@@ -88,14 +89,5 @@ export class ExpenseValidatorService {
     }
 
     return true;
-  }
-
-  // Splits array into chunks: [1,2,3,4,5,6,7], 3 → [[1,2,3], [4,5,6], [7]]
-  private chunkArray<T>(array: T[], size: number): T[][] {
-    const chunks: T[][] = [];
-    for (let i = 0; i < array.length; i += size) {
-      chunks.push(array.slice(i, i + size));
-    }
-    return chunks;
   }
 }
