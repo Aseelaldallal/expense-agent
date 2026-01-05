@@ -2,11 +2,7 @@ import { injectable } from 'inversify';
 import path from 'path';
 import fs from 'fs/promises';
 import type { FileCategory, FileUploadResult } from '../types/services/upload.types';
-
-const UPLOAD_DIRECTORIES: Record<FileCategory, string> = {
-  policy: 'uploads/policies',
-  expense: 'uploads/expenses',
-};
+import { UPLOAD_DIRECTORIES } from '../config/paths';
 
 @injectable()
 export class UploadService {
