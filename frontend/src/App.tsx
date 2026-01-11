@@ -470,68 +470,71 @@ export default function App() {
 
         {/* Debug Panel */}
         {validationResults && !isValidating && debugTiming && (
-          <div className="mt-4 bg-slate-900 rounded-xl text-sm font-mono overflow-hidden">
-            {/* Step 1 */}
-            <div className="border-b border-slate-800">
-              <button
-                onClick={() => setStep1Open(!step1Open)}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
-              >
-                <span className="text-slate-300">Step 1: Parse Expenses (CSV → JSON)</span>
-                <div className="flex items-center gap-3">
-                  <span className="text-slate-500">{debugTiming.parseTimeMs.toFixed(0)}ms</span>
-                  {step1Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
-                </div>
-              </button>
-              {step1Open && (
-                <div className="px-4 pb-4">
-                  <p className="text-emerald-400">
-                    ✓ Parsed {validationResults.length} expenses from CSV
-                  </p>
-                </div>
-              )}
-            </div>
+          <div className="mt-4">
+            <p className="text-sm text-slate-500 mb-3">Debug Info</p>
+            <div className="space-y-2 text-sm font-mono">
+              {/* Step 1 */}
+              <div className="bg-slate-900 rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setStep1Open(!step1Open)}
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
+                >
+                  <span className="text-slate-300">Step 1: Parse Expenses (CSV → JSON)</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-slate-500">{debugTiming.parseTimeMs.toFixed(0)}ms</span>
+                    {step1Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                  </div>
+                </button>
+                {step1Open && (
+                  <div className="px-4 pb-4">
+                    <p className="text-emerald-400">
+                      ✓ Parsed {validationResults.length} expenses from CSV
+                    </p>
+                  </div>
+                )}
+              </div>
 
-            {/* Step 2 */}
-            <div className="border-b border-slate-800">
-              <button
-                onClick={() => setStep2Open(!step2Open)}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
-              >
-                <span className="text-slate-300">Step 2: Extract Rules (LLM Call #1)</span>
-                <div className="flex items-center gap-3">
-                  <span className="text-slate-500">{debugTiming.extractTimeMs.toFixed(0)}ms</span>
-                  {step2Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
-                </div>
-              </button>
-              {step2Open && extractedRules && (
-                <div className="px-4 pb-4">
-                  <pre className="text-slate-300 overflow-x-auto">
-                    {JSON.stringify(extractedRules, null, 2)}
-                  </pre>
-                </div>
-              )}
-            </div>
+              {/* Step 2 */}
+              <div className="bg-slate-900 rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setStep2Open(!step2Open)}
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
+                >
+                  <span className="text-slate-300">Step 2: Extract Rules (LLM Call #1)</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-slate-500">{debugTiming.extractTimeMs.toFixed(0)}ms</span>
+                    {step2Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                  </div>
+                </button>
+                {step2Open && extractedRules && (
+                  <div className="px-4 pb-4">
+                    <pre className="text-slate-300 overflow-x-auto">
+                      {JSON.stringify(extractedRules, null, 2)}
+                    </pre>
+                  </div>
+                )}
+              </div>
 
-            {/* Step 3 */}
-            <div>
-              <button
-                onClick={() => setStep3Open(!step3Open)}
-                className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
-              >
-                <span className="text-slate-300">Step 3: Validate (LLM Call #2)</span>
-                <div className="flex items-center gap-3">
-                  <span className="text-slate-500">{debugTiming.validateTimeMs.toFixed(0)}ms</span>
-                  {step3Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
-                </div>
-              </button>
-              {step3Open && extractedRules && (
-                <div className="px-4 pb-4">
-                  <p className="text-emerald-400">
-                    ✓ Validated {validationResults.length} expenses against {extractedRules.length} rules
-                  </p>
-                </div>
-              )}
+              {/* Step 3 */}
+              <div className="bg-slate-900 rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setStep3Open(!step3Open)}
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
+                >
+                  <span className="text-slate-300">Step 3: Validate (LLM Call #2)</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-slate-500">{debugTiming.validateTimeMs.toFixed(0)}ms</span>
+                    {step3Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                  </div>
+                </button>
+                {step3Open && extractedRules && (
+                  <div className="px-4 pb-4">
+                    <p className="text-emerald-400">
+                      ✓ Validated {validationResults.length} expenses against {extractedRules.length} rules
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
