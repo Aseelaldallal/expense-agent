@@ -1,7 +1,11 @@
 import { inject, injectable } from 'inversify';
 import OpenAI from 'openai';
 import { TOKENS } from '../container/injection-tokens';
-import type { Expense, ExtractedPolicy, ValidationResult } from '../../../shared/types/api/validation.types';
+import type {
+  Expense,
+  ExtractedPolicy,
+  ValidationResult,
+} from '../../../shared/types/api/validation.types';
 import {
   EXPENSE_VALIDATION_SYSTEM_PROMPT,
   EXPENSE_VALIDATION_USER_PROMPT,
@@ -65,6 +69,7 @@ export class ExpenseValidatorService {
   private parseResponse(content: string): ValidationResult[] {
     const parsed = JSON.parse(content);
     const { results } = parsed as { results: unknown };
+    console.log('Results:', results);
 
     if (!this.isValidationResultArray(results)) {
       throw new Error('OpenAI response does not match ValidationResult[] structure');
@@ -83,7 +88,12 @@ export class ExpenseValidatorService {
       if (typeof r.expense !== 'object' || r.expense === null) return false;
       if (!['approved', 'needs_review', 'violation'].includes(r.status as string)) return false;
       if (typeof r.reason !== 'string') return false;
-      if (r.ruleApplied !== undefined && typeof r.ruleApplied !== 'string') return false;
+      if (
+        r.ruleApplied !== undefined &&
+        r.ruleApplied !== null &&
+        typeof r.ruleApplied !== 'string'
+      )
+        return false;
     }
 
     return true;
