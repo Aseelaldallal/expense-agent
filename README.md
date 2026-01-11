@@ -1,15 +1,17 @@
 # Expense Agent
 
+> _See [setup.md](setup.md) for instructions on how to run the project._
+
 A multi-step LLM validation system that checks expense reports against company policies.
 
-**This is a learning exercise, not production code.** The goal is to understand how chaining multiple LLM calls improves debuggability and reliability over single-call approaches.
+**This is a learning exercise, not production code.** The goal is to understand how chaining multiple LLM calls improves debuggability and reliability over single-call approaches. Peripheral concerns are simplified (e.g., in-memory file storage instead of GCS/S3) to stay focused on the core learning goals.
 
 ## What It Does
 
 Upload a company expense policy and an expense report (CSV). The system validates each expense through a three-step chain, flagging violations, approvals, and items needing review.
 
-![Initial UI](images/initial.png)
-![Results UI](images/results.png)
+<img src="images/initial.png" alt="Initial UI" width="700">
+<img src="images/results.png" alt="Results UI" width="700">
 
 ## The Multi-Step Chain
 
@@ -68,8 +70,8 @@ The debug panel shows exactly what happened at each step:
 
 This transparency is the core benefit of multi-step: when validation is wrong, you can see whether Step 2 misunderstood the policy or Step 3 misapplied it.
 
-![Debug View](images/DebugInfo.png)
-![Debug View Expanded](images/DebugInfoExpanded.png)
+<img src="images/DebugInfo.png" alt="Debug View" width="700">
+<img src="images/DebugInfoExpanded.png" alt="Debug View Expanded" width="700">
 
 ## Key Architectural Decisions
 
@@ -135,3 +137,7 @@ Balances API efficiency (fewer calls) with reliability (smaller context per call
 | DI            | Inversify               |
 | File Handling | Multer (memory storage) |
 | CSV Parsing   | PapaParse               |
+
+---
+
+> _My focus is backend architecture and implementation — service design, LLM integration patterns, and pipeline orchestration. The frontend was built with [Claude Code](https://claude.ai/code)._
