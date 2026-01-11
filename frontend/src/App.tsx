@@ -11,7 +11,7 @@ import {
   Loader2,
   Trash2,
 } from 'lucide-react';
-import type { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile } from './types/components/app.types';
+import type { ValidationStatus, ExtractedRule, ValidationResult, UploadedFile, DebugTiming } from './types/components/app.types';
 import { uploadPolicy, uploadExpense, deletePolicy, deleteExpense, listPolicies, listExpenses, validateExpenses } from './api';
 
 // Components
@@ -160,7 +160,6 @@ function UploadCard({
 }
 
 export default function App() {
-  const [showDebug, setShowDebug] = useState(false);
   const [policyFile, setPolicyFile] = useState<UploadedFile | null>(null);
   const [expensesFile, setExpensesFile] = useState<UploadedFile | null>(null);
   const [isUploadingPolicy, setIsUploadingPolicy] = useState(false);
@@ -170,7 +169,11 @@ export default function App() {
   const [isValidating, setIsValidating] = useState(false);
   const [validationResults, setValidationResults] = useState<ValidationResult[] | null>(null);
   const [extractedRules, setExtractedRules] = useState<ExtractedRule[] | null>(null);
+  const [debugTiming, setDebugTiming] = useState<DebugTiming | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [step1Open, setStep1Open] = useState(false);
+  const [step2Open, setStep2Open] = useState(false);
+  const [step3Open, setStep3Open] = useState(false);
 
   useEffect(() => {
     async function loadExistingFiles() {
@@ -275,6 +278,10 @@ export default function App() {
     setError(null);
     setValidationResults(null);
     setExtractedRules(null);
+    setDebugTiming(null);
+    setStep1Open(false);
+    setStep2Open(false);
+    setStep3Open(false);
 
     try {
       const response = await validateExpenses();
@@ -297,6 +304,7 @@ export default function App() {
 
       setExtractedRules(rules);
       setValidationResults(results);
+      setDebugTiming(response.debug);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Validation failed');
     } finally {
@@ -461,42 +469,70 @@ export default function App() {
         )}
 
         {/* Debug Panel */}
-        {validationResults && !isValidating && (
-          <div className="mt-4">
-            <button
-              onClick={() => setShowDebug(!showDebug)}
-              className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 transition-colors cursor-pointer"
-            >
-              {showDebug ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              Debug Info
-            </button>
-
-            {showDebug && extractedRules && (
-              <div className="mt-3 bg-slate-900 rounded-xl p-6 text-sm font-mono">
-                <div className="mb-6">
-                  <p className="text-slate-400 mb-2">Step 1: Parse Expenses (CSV → JSON)</p>
+        {validationResults && !isValidating && debugTiming && (
+          <div className="mt-4 bg-slate-900 rounded-xl text-sm font-mono overflow-hidden">
+            {/* Step 1 */}
+            <div className="border-b border-slate-800">
+              <button
+                onClick={() => setStep1Open(!step1Open)}
+                className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
+              >
+                <span className="text-slate-300">Step 1: Parse Expenses (CSV → JSON)</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-500">{debugTiming.parseTimeMs.toFixed(0)}ms</span>
+                  {step1Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                </div>
+              </button>
+              {step1Open && (
+                <div className="px-4 pb-4">
                   <p className="text-emerald-400">
                     ✓ Parsed {validationResults.length} expenses from CSV
                   </p>
                 </div>
+              )}
+            </div>
 
-                <div className="mb-6">
-                  <p className="text-slate-400 mb-2">Step 2: Extract Rules (LLM Call #1)</p>
+            {/* Step 2 */}
+            <div className="border-b border-slate-800">
+              <button
+                onClick={() => setStep2Open(!step2Open)}
+                className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
+              >
+                <span className="text-slate-300">Step 2: Extract Rules (LLM Call #1)</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-500">{debugTiming.extractTimeMs.toFixed(0)}ms</span>
+                  {step2Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+                </div>
+              </button>
+              {step2Open && extractedRules && (
+                <div className="px-4 pb-4">
                   <pre className="text-slate-300 overflow-x-auto">
                     {JSON.stringify(extractedRules, null, 2)}
                   </pre>
                 </div>
+              )}
+            </div>
 
-                <div>
-                  <p className="text-slate-400 mb-2">Step 3: Validate (LLM Call #2)</p>
-                  <p className="text-emerald-400">
-                    ✓ Validated {validationResults.length} expenses against {extractedRules.length}{' '}
-                    rules
-                  </p>
-                  <p className="text-slate-500 mt-1">Total tokens: 1,247 • Latency: 2.3s</p>
+            {/* Step 3 */}
+            <div>
+              <button
+                onClick={() => setStep3Open(!step3Open)}
+                className="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-800/50 transition-colors cursor-pointer"
+              >
+                <span className="text-slate-300">Step 3: Validate (LLM Call #2)</span>
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-500">{debugTiming.validateTimeMs.toFixed(0)}ms</span>
+                  {step3Open ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
                 </div>
-              </div>
-            )}
+              </button>
+              {step3Open && extractedRules && (
+                <div className="px-4 pb-4">
+                  <p className="text-emerald-400">
+                    ✓ Validated {validationResults.length} expenses against {extractedRules.length} rules
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>

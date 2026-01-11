@@ -22,3 +22,10 @@ export interface UploadedFile {
   id?: string;
   serverPath?: string;
 }
+
+export interface DebugTiming {
+  parseTimeMs: number;
+  extractTimeMs: number;
+  validateTimeMs: number;
+  totalTimeMs: number;
+}
